@@ -3,7 +3,7 @@ import random
 import numpy as np
 
 from rrt_algorithms.rrt.tree import Tree
-from rrt_algorithms.utilities.geometry import steer
+from rrt_algorithms.utilities.geometry import steer, dist_between_points
 
 
 class RRTBase(object):
@@ -43,7 +43,7 @@ class RRTBase(object):
         """
         self.trees[tree].V.insert(0, v + v, v)
         self.trees[tree].V_count += 1  # increment number of vertices in tree
-        self.samples_taken += 1  # increment number of samples taken
+        # self.samples_taken += 1  # increment number of samples taken
 
     def add_edge(self, tree, child, parent):
         """
@@ -164,10 +164,10 @@ class RRTBase(object):
             print("Checking if can connect to goal at", str(self.samples_taken), "samples")
             path = self.get_path()
             if path is not None:
-                return True, path
+                return True, path, self.samples_taken
         # check if can connect to goal after generating max_samples
         if self.samples_taken >= self.max_samples:
-            return True, self.get_path()
+            return True, self.get_path(), self.samples_taken
         return False, None
 
     def bound_point(self, point):
